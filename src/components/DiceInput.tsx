@@ -34,7 +34,7 @@ function DieSlot({
 }) {
   if (!die) {
     return (
-      <div className="w-16 h-20 rounded-lg border-2 border-dashed border-muted-foreground/30" />
+      <div className="w-12 h-14 rounded-lg border-2 border-dashed border-muted-foreground/30" />
     )
   }
 
@@ -44,13 +44,13 @@ function DieSlot({
     <button
       onClick={onRemove}
       className={cn(
-        'relative w-16 h-20 rounded-lg border-2 transition-all active:scale-95',
+        'relative w-12 h-14 rounded-lg border-2 transition-all active:scale-95',
         ZONE_BG_COLORS[die.zone],
         'border-transparent hover:border-destructive/50'
       )}
     >
-      <span className="text-2xl font-bold">{die.value}</span>
-      <span className="absolute bottom-1 right-1.5 text-xs font-medium opacity-75">
+      <span className="text-xl font-bold">{die.value}</span>
+      <span className="absolute bottom-0.5 right-1 text-[10px] font-medium opacity-75">
         {zoneConfig?.label}
       </span>
     </button>
@@ -76,14 +76,14 @@ function RoundRecap({
   const getPlayer = (id: string) => players.find((p) => p.id === id)
 
   return (
-    <div className="min-h-screen p-4 flex flex-col gap-4">
+    <div className="p-3 pb-32 flex flex-col gap-3">
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-xl text-center">
+        <CardHeader className="pb-2 pt-3">
+          <CardTitle className="text-lg text-center">
             Récap Manche {currentRound}
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-2 pb-3">
           {playOrder.map((playerId) => {
             const player = getPlayer(playerId)
             if (!player) return null
@@ -92,18 +92,18 @@ function RoundRecap({
             return (
               <div
                 key={playerId}
-                className="flex items-center gap-3 p-3 rounded-lg bg-muted/50"
+                className="flex items-center gap-2 p-2 rounded-lg bg-muted/50"
               >
                 <div
                   className={cn(
-                    'w-5 h-5 rounded-full',
+                    'w-4 h-4 rounded-full',
                     DIE_COLORS[player.color].bgClass
                   )}
                 />
                 <span className="font-medium flex-1">{player.name}</span>
                 <span
                   className={cn(
-                    'text-xl font-bold tabular-nums',
+                    'text-lg font-bold tabular-nums',
                     score < 0 ? 'text-red-500' : 'text-green-600 dark:text-green-400'
                   )}
                 >
@@ -116,11 +116,12 @@ function RoundRecap({
         </CardContent>
       </Card>
 
-      <div className="mt-auto space-y-2">
-        <Button onClick={onValidate} className="w-full h-14 text-lg">
+      {/* Actions - Fixed bottom */}
+      <div className="fixed bottom-0 left-0 right-0 p-3 bg-background border-t space-y-2">
+        <Button onClick={onValidate} className="w-full h-12 text-lg">
           Valider la manche
         </Button>
-        <Button variant="outline" onClick={onModify} className="w-full h-12">
+        <Button variant="outline" onClick={onModify} className="w-full h-10">
           Modifier
         </Button>
       </div>
@@ -231,34 +232,29 @@ export function DiceInput({
   }
 
   return (
-    <div className="min-h-screen p-4 flex flex-col gap-4">
+    <div className="p-3 pb-20 flex flex-col gap-3">
       {/* Header */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-xl text-center">
-            Manche {currentRound}
-          </CardTitle>
-          <div className="flex items-center justify-center gap-2 mt-2">
-            <div
-              className={cn(
-                'w-5 h-5 rounded-full',
-                DIE_COLORS[currentPlayer.color].bgClass
-              )}
-            />
-            <span className="font-medium text-lg">{currentPlayer.name}</span>
-          </div>
-          <p className="text-muted-foreground text-center text-sm">
-            Joueur {currentPlayerIndex + 1} sur {playOrder.length}
-          </p>
-        </CardHeader>
-      </Card>
+      <div className="flex items-center justify-center gap-2 py-1">
+        <span className="font-semibold">Manche {currentRound}</span>
+        <span className="text-muted-foreground">—</span>
+        <div
+          className={cn(
+            'w-4 h-4 rounded-full',
+            DIE_COLORS[currentPlayer.color].bgClass
+          )}
+        />
+        <span className="font-medium">{currentPlayer.name}</span>
+        <span className="text-muted-foreground text-sm">
+          ({currentPlayerIndex + 1}/{playOrder.length})
+        </span>
+      </div>
 
       {/* Dés sélectionnés */}
       <Card>
-        <CardContent className="pt-4">
-          <div className="flex items-center justify-between mb-3">
+        <CardContent className="pt-3 pb-3">
+          <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted-foreground">
-              Dés sélectionnés ({currentDice.length}/{DICE_PER_ROUND})
+              Dés ({currentDice.length}/{DICE_PER_ROUND})
             </span>
             <span
               className={cn(
@@ -285,29 +281,29 @@ export function DiceInput({
               />
             ))}
           </div>
-          <p className="text-xs text-muted-foreground text-center mt-2">
-            Cliquer sur un dé pour le retirer
+          <p className="text-xs text-muted-foreground text-center mt-1.5">
+            Toucher un dé pour le retirer
           </p>
         </CardContent>
       </Card>
 
       {/* Sélecteur de zones */}
       <Card>
-        <CardContent className="pt-4">
-          <label className="text-sm text-muted-foreground mb-2 block">
-            Sélectionnez une zone
+        <CardContent className="pt-3 pb-3">
+          <label className="text-sm text-muted-foreground mb-1 block">
+            Zone
           </label>
-          <div className="flex justify-center gap-2">
+          <div className="flex justify-center gap-1.5">
             {ZONES.map((zone) => (
               <button
                 key={zone.value}
                 onClick={() => setSelectedZone(zone.value)}
                 disabled={currentDice.length >= DICE_PER_ROUND}
                 className={cn(
-                  'w-14 h-14 rounded-lg text-sm font-bold border-2 transition-all',
+                  'w-11 h-10 rounded-lg text-xs font-bold border-2 transition-all',
                   zone.className,
                   selectedZone === zone.value
-                    ? 'ring-2 ring-primary ring-offset-2 scale-105'
+                    ? 'ring-2 ring-primary ring-offset-1 scale-105'
                     : 'opacity-70 hover:opacity-100',
                   currentDice.length >= DICE_PER_ROUND && 'opacity-40 cursor-not-allowed'
                 )}
@@ -320,12 +316,12 @@ export function DiceInput({
       </Card>
 
       {/* Sélecteur de valeurs */}
-      <Card className="flex-1">
-        <CardContent className="pt-4">
-          <label className="text-sm text-muted-foreground mb-2 block">
+      <Card>
+        <CardContent className="pt-3 pb-3">
+          <label className="text-sm text-muted-foreground mb-1 block">
             Valeur du dé
           </label>
-          <div className="flex justify-center gap-2 flex-wrap">
+          <div className="flex justify-center gap-1.5">
             {DIE_VALUES.map((value) => (
               <button
                 key={value}
@@ -334,7 +330,7 @@ export function DiceInput({
                   selectedZone === null || currentDice.length >= DICE_PER_ROUND
                 }
                 className={cn(
-                  'w-14 h-14 rounded-lg text-xl font-bold border-2 transition-all',
+                  'w-11 h-11 rounded-lg text-lg font-bold border-2 transition-all',
                   selectedZone !== null && currentDice.length < DICE_PER_ROUND
                     ? 'bg-primary text-primary-foreground border-primary hover:bg-primary/90 active:scale-95'
                     : 'bg-muted text-muted-foreground border-muted cursor-not-allowed opacity-50'
@@ -345,34 +341,34 @@ export function DiceInput({
             ))}
           </div>
           {selectedZone === null && currentDice.length < DICE_PER_ROUND && (
-            <p className="text-xs text-muted-foreground text-center mt-3">
+            <p className="text-xs text-muted-foreground text-center mt-2">
               Sélectionnez d'abord une zone
             </p>
           )}
         </CardContent>
       </Card>
 
-      {/* Navigation */}
-      <div className="space-y-2">
-        <div className="flex gap-2">
+      {/* Navigation - Fixed bottom */}
+      <div className="fixed bottom-0 left-0 right-0 p-3 bg-background border-t flex gap-2">
+        {currentPlayerIndex === 0 ? (
+          <Button variant="outline" onClick={onCancel} className="flex-1 h-11">
+            Annuler
+          </Button>
+        ) : (
           <Button
             variant="outline"
             onClick={handlePrevious}
-            disabled={currentPlayerIndex === 0}
-            className="flex-1 h-12"
+            className="flex-1 h-11"
           >
             Précédent
           </Button>
-          <Button
-            onClick={handleNext}
-            disabled={!hasFourDice}
-            className="flex-1 h-12"
-          >
-            {isLastPlayer ? 'Terminer' : 'Suivant'}
-          </Button>
-        </div>
-        <Button variant="ghost" onClick={onCancel} className="w-full">
-          Annuler
+        )}
+        <Button
+          onClick={handleNext}
+          disabled={!hasFourDice}
+          className="flex-1 h-11"
+        >
+          {isLastPlayer ? 'Terminer' : 'Suivant'}
         </Button>
       </div>
     </div>
