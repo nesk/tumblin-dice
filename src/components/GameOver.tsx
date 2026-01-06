@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { FixedBottomBar } from '@/components/ui/fixed-bottom-bar'
 import type { Player } from '@/types/game'
 import type { PlayerRanking } from '@/lib/scoring'
 import { DIE_COLORS } from '@/lib/constants'
@@ -25,7 +26,7 @@ export function GameOver({
   const getPlayer = (id: string) => players.find((p) => p.id === id)
 
   return (
-    <div className="min-h-screen p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex flex-col gap-4">
+    <div className="min-h-screen p-4 pb-[calc(8rem+env(safe-area-inset-bottom))] flex flex-col gap-4">
       {/* Winner announcement */}
       <Card className="bg-gradient-to-br from-yellow-100 to-yellow-50 dark:from-yellow-900/30 dark:to-yellow-800/20 border-yellow-300 dark:border-yellow-700">
         <CardHeader>
@@ -47,7 +48,7 @@ export function GameOver({
       </Card>
 
       {/* Final ranking */}
-      <Card className="flex-1">
+      <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg">Classement final</CardTitle>
         </CardHeader>
@@ -84,8 +85,8 @@ export function GameOver({
         </CardContent>
       </Card>
 
-      {/* Actions */}
-      <div className="space-y-2">
+      {/* Actions - Fixed bottom */}
+      <FixedBottomBar className="space-y-2">
         <Button onClick={onRestartSamePlayers} className="w-full h-14 text-lg">
           Rejouer (mêmes joueurs)
         </Button>
@@ -96,7 +97,7 @@ export function GameOver({
         >
           Nouvelle partie
         </Button>
-      </div>
+      </FixedBottomBar>
     </div>
   )
 }
