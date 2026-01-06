@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { FixedBottomBar } from '@/components/ui/fixed-bottom-bar'
 import type { DieColor } from '@/types/game'
 import { DIE_COLORS, DEFAULT_TARGET_SCORE } from '@/lib/constants'
 
@@ -85,7 +86,7 @@ export function PlayerSetup({ onStart }: PlayerSetupProps) {
   }
 
   return (
-    <div className="p-4 pb-24 flex flex-col gap-4 max-w-md mx-auto">
+    <div className="p-4 pb-[calc(6rem+env(safe-area-inset-bottom))] flex flex-col gap-4 max-w-md mx-auto">
       {/* Header */}
       <Card>
         <CardHeader className="pb-0">
@@ -165,7 +166,7 @@ export function PlayerSetup({ onStart }: PlayerSetupProps) {
       </Card>
 
       {/* Bouton fixe en bas */}
-      <div className="fixed bottom-0 left-0 right-0 p-3 bg-background border-t">
+      <FixedBottomBar>
         <Button
           onClick={() => handleSubmit()}
           className="w-full h-12 text-lg max-w-md mx-auto block"
@@ -173,7 +174,7 @@ export function PlayerSetup({ onStart }: PlayerSetupProps) {
         >
           Commencer la partie
         </Button>
-      </div>
+      </FixedBottomBar>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { FixedBottomBar } from '@/components/ui/fixed-bottom-bar'
 import type { Player, DieResult, DieValue, Zone, RoundResult } from '@/types/game'
 import {
   DIE_COLORS,
@@ -76,7 +77,7 @@ function RoundRecap({
   const getPlayer = (id: string) => players.find((p) => p.id === id)
 
   return (
-    <div className="p-3 pb-32 flex flex-col gap-3">
+    <div className="p-3 pb-[calc(8rem+env(safe-area-inset-bottom))] flex flex-col gap-3">
       <Card>
         <CardHeader className="pb-2 pt-3">
           <CardTitle className="text-lg text-center">
@@ -117,14 +118,14 @@ function RoundRecap({
       </Card>
 
       {/* Actions - Fixed bottom */}
-      <div className="fixed bottom-0 left-0 right-0 p-3 bg-background border-t space-y-2">
+      <FixedBottomBar className="space-y-2">
         <Button onClick={onValidate} className="w-full h-12 text-lg">
           Valider la manche
         </Button>
         <Button variant="outline" onClick={onModify} className="w-full h-10">
           Modifier
         </Button>
-      </div>
+      </FixedBottomBar>
     </div>
   )
 }
@@ -232,7 +233,7 @@ export function DiceInput({
   }
 
   return (
-    <div className="p-3 pb-20 flex flex-col gap-3">
+    <div className="p-3 pb-[calc(5rem+env(safe-area-inset-bottom))] flex flex-col gap-3">
       {/* Header */}
       <div className="flex items-center justify-center gap-2 py-1">
         <span className="font-semibold">Manche {currentRound}</span>
@@ -349,7 +350,7 @@ export function DiceInput({
       </Card>
 
       {/* Navigation - Fixed bottom */}
-      <div className="fixed bottom-0 left-0 right-0 p-3 bg-background border-t flex gap-2">
+      <FixedBottomBar className="flex gap-2">
         {currentPlayerIndex === 0 ? (
           <Button variant="outline" onClick={onCancel} className="flex-1 h-11">
             Annuler
@@ -370,7 +371,7 @@ export function DiceInput({
         >
           {isLastPlayer ? 'Terminer' : 'Suivant'}
         </Button>
-      </div>
+      </FixedBottomBar>
     </div>
   )
 }

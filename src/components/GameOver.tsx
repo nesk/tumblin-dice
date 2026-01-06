@@ -25,7 +25,7 @@ export function GameOver({
   const getPlayer = (id: string) => players.find((p) => p.id === id)
 
   return (
-    <div className="min-h-screen p-4 flex flex-col gap-4">
+    <div className="min-h-screen p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex flex-col gap-4">
       {/* Winner announcement */}
       <Card className="bg-gradient-to-br from-yellow-100 to-yellow-50 dark:from-yellow-900/30 dark:to-yellow-800/20 border-yellow-300 dark:border-yellow-700">
         <CardHeader>

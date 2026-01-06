@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { FixedBottomBar } from '@/components/ui/fixed-bottom-bar'
 import type { Player } from '@/types/game'
 import type { PlayerRanking } from '@/lib/scoring'
 import { DIE_COLORS } from '@/lib/constants'
@@ -27,7 +28,7 @@ export function GameBoard({
   const getPlayer = (id: string) => players.find((p) => p.id === id)
 
   return (
-    <div className="p-3 pb-32 flex flex-col gap-3">
+    <div className="p-3 pb-[calc(8rem+env(safe-area-inset-bottom))] flex flex-col gap-3">
       {/* Header */}
       <Card>
         <CardHeader className="py-2">
@@ -101,7 +102,7 @@ export function GameBoard({
       </Card>
 
       {/* Actions - Fixed bottom */}
-      <div className="fixed bottom-0 left-0 right-0 p-3 bg-background border-t space-y-2">
+      <FixedBottomBar className="space-y-2">
         <Button onClick={onEnterScores} className="w-full h-12 text-base">
           Saisir les scores
         </Button>
@@ -112,7 +113,7 @@ export function GameBoard({
         >
           Historique
         </Button>
-      </div>
+      </FixedBottomBar>
     </div>
   )
 }
