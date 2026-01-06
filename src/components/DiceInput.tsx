@@ -282,7 +282,7 @@ export function DiceInput({
             ))}
           </div>
           <p className="text-xs text-muted-foreground text-center mt-1.5">
-            Toucher un dé pour le retirer
+            Touchez un dé pour le retirer
           </p>
         </CardContent>
       </Card>
