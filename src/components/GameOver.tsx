@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import confetti from 'canvas-confetti'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -24,6 +26,30 @@ export function GameOver({
   onNewGame,
 }: GameOverProps) {
   const getPlayer = (id: string) => players.find((p) => p.id === id)
+
+  useEffect(() => {
+    const end = Date.now() + 500
+
+    const frame = () => {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+      })
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+      })
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame)
+      }
+    }
+    frame()
+  }, [])
 
   return (
     <div className="min-h-screen p-4 pb-[calc(8rem+env(safe-area-inset-bottom))] flex flex-col gap-4">
