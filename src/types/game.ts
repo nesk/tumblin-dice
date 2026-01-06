@@ -34,6 +34,7 @@ export interface GameState {
   isGameOver: boolean
   winnerId: string | null
   targetScore: number
+  dicePerRound: number
 }
 
 export type Screen = 'setup' | 'game' | 'input' | 'history' | 'gameover'

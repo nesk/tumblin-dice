@@ -7,7 +7,6 @@ import {
   DIE_COLORS,
   DIE_VALUES,
   ZONES,
-  DICE_PER_ROUND,
   ZONE_BG_COLORS,
 } from '@/lib/constants'
 import { calculateRoundScore } from '@/lib/scoring'
@@ -17,6 +16,7 @@ interface DiceInputProps {
   currentRound: number
   playOrder: string[]
   players: Player[]
+  dicePerRound: number
   onSubmit: (results: RoundResult[], playOrder: string[]) => void
   onCancel: () => void
 }
@@ -134,6 +134,7 @@ export function DiceInput({
   currentRound,
   playOrder,
   players,
+  dicePerRound,
   onSubmit,
   onCancel,
 }: DiceInputProps) {
@@ -158,12 +159,12 @@ export function DiceInput({
   )
 
   const isLastPlayer = currentPlayerIndex === playOrder.length - 1
-  const hasFourDice = currentDice.length === DICE_PER_ROUND
+  const hasAllDice = currentDice.length === dicePerRound
 
   // Ajouter un dé
   const addDie = useCallback(
     (value: DieValue) => {
-      if (selectedZone === null || currentDice.length >= DICE_PER_ROUND) return
+      if (selectedZone === null || currentDice.length >= dicePerRound) return
 
       const newDie: DieResult = { value, zone: selectedZone }
       setAllDice((prev) => ({
@@ -171,7 +172,7 @@ export function DiceInput({
         [currentPlayerId]: [...(prev[currentPlayerId] || []), newDie],
       }))
     },
-    [selectedZone, currentDice.length, currentPlayerId]
+    [selectedZone, currentDice.length, currentPlayerId, dicePerRound]
   )
 
   // Retirer un dé
@@ -255,7 +256,7 @@ export function DiceInput({
         <CardContent className="pt-3 pb-3">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted-foreground">
-              Dés ({currentDice.length}/{DICE_PER_ROUND})
+              Dés ({currentDice.length}/{dicePerRound})
             </span>
             <span
               className={cn(
@@ -272,7 +273,7 @@ export function DiceInput({
             </span>
           </div>
           <div className="flex justify-center gap-2">
-            {Array.from({ length: DICE_PER_ROUND }).map((_, index) => (
+            {Array.from({ length: dicePerRound }).map((_, index) => (
               <DieSlot
                 key={index}
                 die={currentDice[index] || null}
@@ -299,14 +300,14 @@ export function DiceInput({
               <button
                 key={zone.value}
                 onClick={() => setSelectedZone(zone.value)}
-                disabled={currentDice.length >= DICE_PER_ROUND}
+                disabled={currentDice.length >= dicePerRound}
                 className={cn(
                   'w-11 h-10 rounded-lg text-xs font-bold border-2 transition-all',
                   zone.className,
                   selectedZone === zone.value
                     ? 'ring-2 ring-primary ring-offset-1 scale-105'
                     : 'opacity-70 hover:opacity-100',
-                  currentDice.length >= DICE_PER_ROUND && 'opacity-40 cursor-not-allowed'
+                  currentDice.length >= dicePerRound && 'opacity-40 cursor-not-allowed'
                 )}
               >
                 {zone.label}
@@ -328,11 +329,11 @@ export function DiceInput({
                 key={value}
                 onClick={() => addDie(value)}
                 disabled={
-                  selectedZone === null || currentDice.length >= DICE_PER_ROUND
+                  selectedZone === null || currentDice.length >= dicePerRound
                 }
                 className={cn(
                   'w-11 h-11 rounded-lg text-lg font-bold border-2 transition-all',
-                  selectedZone !== null && currentDice.length < DICE_PER_ROUND
+                  selectedZone !== null && currentDice.length < dicePerRound
                     ? 'bg-primary text-primary-foreground border-primary hover:bg-primary/90 active:scale-95'
                     : 'bg-muted text-muted-foreground border-muted cursor-not-allowed opacity-50'
                 )}
@@ -341,7 +342,7 @@ export function DiceInput({
               </button>
             ))}
           </div>
-          {selectedZone === null && currentDice.length < DICE_PER_ROUND && (
+          {selectedZone === null && currentDice.length < dicePerRound && (
             <p className="text-xs text-muted-foreground text-center mt-2">
               Sélectionnez d'abord une zone
             </p>
@@ -366,7 +367,7 @@ export function DiceInput({
         )}
         <Button
           onClick={handleNext}
-          disabled={!hasFourDice}
+          disabled={!hasAllDice}
           className="flex-1 h-11"
         >
           {isLastPlayer ? 'Terminer' : 'Suivant'}

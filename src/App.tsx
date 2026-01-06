@@ -61,8 +61,8 @@ function App() {
     setScreen('setup')
   }
 
-  const handleStartGame = (players: { name: string; color: DieColor }[], targetScore: number) => {
-    initGame(players, targetScore)
+  const handleStartGame = (players: { name: string; color: DieColor }[], targetScore: number, dicePerRound: number) => {
+    initGame(players, targetScore, dicePerRound)
     const order = shuffleArray(players.map((_, i) => `player-${i}`))
     setCurrentPlayOrder(order)
     setScreen('game')
@@ -141,6 +141,7 @@ function App() {
           currentRound={gameState.currentRound}
           playOrder={playOrder}
           players={gameState.players}
+          dicePerRound={gameState.dicePerRound}
           onSubmit={handleSubmitRound}
           onCancel={() => setScreen('game')}
         />

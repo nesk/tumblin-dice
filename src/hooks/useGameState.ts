@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useLocalStorage } from './useLocalStorage'
 import type { GameState, Player, RoundResult, DieColor } from '@/types/game'
-import { STORAGE_KEY, DEFAULT_TARGET_SCORE } from '@/lib/constants'
+import { STORAGE_KEY, DEFAULT_TARGET_SCORE, DICE_PER_ROUND } from '@/lib/constants'
 import {
   calculateTotalScore,
   getPlayerRanking,
@@ -16,6 +16,7 @@ const initialGameState: GameState = {
   isGameOver: false,
   winnerId: null,
   targetScore: DEFAULT_TARGET_SCORE,
+  dicePerRound: DICE_PER_ROUND,
 }
 
 export function useGameState() {
@@ -29,7 +30,7 @@ export function useGameState() {
   }, [gameState.players.length, gameState.currentRound])
 
   const initGame = useCallback(
-    (players: { name: string; color: DieColor }[], targetScore: number) => {
+    (players: { name: string; color: DieColor }[], targetScore: number, dicePerRound: number) => {
       const newPlayers: Player[] = players.map((p, index) => ({
         id: `player-${index}`,
         name: p.name,
@@ -45,6 +46,7 @@ export function useGameState() {
         isGameOver: false,
         winnerId: null,
         targetScore,
+        dicePerRound,
       })
 
       return shuffledOrder

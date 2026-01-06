@@ -3,6 +3,7 @@ import type { DieColor, Zone } from '@/types/game'
 export const DEFAULT_TARGET_SCORE = 301
 
 export const DICE_PER_ROUND = 4
+export const DICE_PER_ROUND_2P = 5
 
 export const DIE_COLORS: Record<DieColor, { label: string; bgClass: string; textClass: string }> = {
   red: {
