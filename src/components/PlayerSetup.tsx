@@ -4,16 +4,17 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import type { DieColor } from '@/types/game'
-import { DIE_COLORS } from '@/lib/constants'
+import { DIE_COLORS, DEFAULT_TARGET_SCORE } from '@/lib/constants'
 
 interface PlayerSetupProps {
-  onStart: (players: { name: string; color: DieColor }[]) => void
+  onStart: (players: { name: string; color: DieColor }[], targetScore: number) => void
 }
 
 const COLORS: DieColor[] = ['red', 'green', 'blue', 'black']
 
 export function PlayerSetup({ onStart }: PlayerSetupProps) {
   const [playerCount, setPlayerCount] = useState<3 | 4>(4)
+  const [targetScore, setTargetScore] = useState(DEFAULT_TARGET_SCORE)
   const [players, setPlayers] = useState<{ name: string; color: DieColor }[]>([
     { name: '', color: 'red' },
     { name: '', color: 'green' },
@@ -68,25 +69,35 @@ export function PlayerSetup({ onStart }: PlayerSetupProps) {
     })
   }
 
-  const isValid = activePlayers.every((p) => p.name.trim().length > 0)
+  const isValid =
+    activePlayers.every((p) => p.name.trim().length > 0) &&
+    targetScore >= 1 &&
+    !isNaN(targetScore)
 
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault()
     if (isValid) {
-      onStart(activePlayers.map((p) => ({ ...p, name: p.name.trim() })))
+      onStart(
+        activePlayers.map((p) => ({ ...p, name: p.name.trim() })),
+        targetScore
+      )
     }
   }
 
   return (
-    <div className="p-4 pb-24 flex flex-col">
-      <Card className="max-w-md mx-auto w-full">
-        <CardHeader className="pb-4">
+    <div className="p-4 pb-24 flex flex-col gap-4 max-w-md mx-auto">
+      {/* Header */}
+      <Card>
+        <CardHeader className="pb-0">
           <CardTitle className="text-2xl text-center">Tumblin' Dice</CardTitle>
-          <p className="text-muted-foreground text-center text-sm">
-            Entrez les noms des joueurs
-          </p>
-          <div className="flex items-center justify-center gap-3 pt-2">
-            <span className="text-sm text-muted-foreground">Nombre de joueurs</span>
+        </CardHeader>
+      </Card>
+
+      {/* Configuration */}
+      <Card>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Nombre de joueurs</span>
             <ToggleGroup
               type="single"
               variant="outline"
@@ -101,8 +112,23 @@ export function PlayerSetup({ onStart }: PlayerSetupProps) {
               </ToggleGroupItem>
             </ToggleGroup>
           </div>
-        </CardHeader>
-        <CardContent>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Score à atteindre</span>
+            <Input
+              type="number"
+              inputMode="numeric"
+              min={1}
+              value={targetScore}
+              onChange={(e) => setTargetScore(Number(e.target.value))}
+              className="w-24 h-8 text-center"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Joueurs */}
+      <Card>
+        <CardContent className="pt-4">
           <form onSubmit={handleSubmit} className="space-y-6">
             {activePlayers.map((player, index) => (
               <div key={index} className="space-y-1.5">

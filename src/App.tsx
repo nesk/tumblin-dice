@@ -61,8 +61,8 @@ function App() {
     setScreen('setup')
   }
 
-  const handleStartGame = (players: { name: string; color: DieColor }[]) => {
-    initGame(players)
+  const handleStartGame = (players: { name: string; color: DieColor }[], targetScore: number) => {
+    initGame(players, targetScore)
     const order = shuffleArray(players.map((_, i) => `player-${i}`))
     setCurrentPlayOrder(order)
     setScreen('game')
@@ -130,6 +130,7 @@ function App() {
           playOrder={playOrder}
           players={gameState.players}
           ranking={ranking}
+          targetScore={gameState.targetScore}
           onEnterScores={handleEnterScores}
           onViewHistory={() => setScreen('history')}
         />

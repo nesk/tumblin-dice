@@ -33,6 +33,7 @@ export interface GameState {
   currentRound: number
   isGameOver: boolean
   winnerId: string | null
+  targetScore: number
 }
 
 export type Screen = 'setup' | 'game' | 'input' | 'history' | 'gameover'

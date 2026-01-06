@@ -3,13 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import type { Player } from '@/types/game'
 import type { PlayerRanking } from '@/lib/scoring'
-import { DIE_COLORS, WINNING_SCORE } from '@/lib/constants'
+import { DIE_COLORS } from '@/lib/constants'
 
 interface GameBoardProps {
   currentRound: number
   playOrder: string[]
   players: Player[]
   ranking: PlayerRanking[]
+  targetScore: number
   onEnterScores: () => void
   onViewHistory: () => void
 }
@@ -19,6 +20,7 @@ export function GameBoard({
   playOrder,
   players,
   ranking,
+  targetScore,
   onEnterScores,
   onViewHistory,
 }: GameBoardProps) {
@@ -33,7 +35,7 @@ export function GameBoard({
             Manche {currentRound}
           </CardTitle>
           <p className="text-muted-foreground text-center text-sm">
-            Premier à {WINNING_SCORE} points gagne
+            Premier à {targetScore} points gagne
           </p>
         </CardHeader>
       </Card>

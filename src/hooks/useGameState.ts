@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useLocalStorage } from './useLocalStorage'
 import type { GameState, Player, RoundResult, DieColor } from '@/types/game'
-import { STORAGE_KEY, WINNING_SCORE } from '@/lib/constants'
+import { STORAGE_KEY, DEFAULT_TARGET_SCORE } from '@/lib/constants'
 import {
   calculateTotalScore,
   getPlayerRanking,
@@ -15,6 +15,7 @@ const initialGameState: GameState = {
   currentRound: 0,
   isGameOver: false,
   winnerId: null,
+  targetScore: DEFAULT_TARGET_SCORE,
 }
 
 export function useGameState() {
@@ -28,7 +29,7 @@ export function useGameState() {
   }, [gameState.players.length, gameState.currentRound])
 
   const initGame = useCallback(
-    (players: { name: string; color: DieColor }[]) => {
+    (players: { name: string; color: DieColor }[], targetScore: number) => {
       const newPlayers: Player[] = players.map((p, index) => ({
         id: `player-${index}`,
         name: p.name,
@@ -43,6 +44,7 @@ export function useGameState() {
         currentRound: 1,
         isGameOver: false,
         winnerId: null,
+        targetScore,
       })
 
       return shuffledOrder
@@ -76,7 +78,7 @@ export function useGameState() {
 
         // Check for winner
         const ranking = getPlayerRanking(newState)
-        const winner = ranking.find((r) => r.totalScore >= WINNING_SCORE)
+        const winner = ranking.find((r) => r.totalScore >= prev.targetScore)
 
         if (winner) {
           newState.isGameOver = true

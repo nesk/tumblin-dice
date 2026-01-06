@@ -1,6 +1,6 @@
 import type { DieColor, Zone } from '@/types/game'
 
-export const WINNING_SCORE = 301
+export const DEFAULT_TARGET_SCORE = 301
 
 export const DICE_PER_ROUND = 4
 
