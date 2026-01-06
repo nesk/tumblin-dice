@@ -94,6 +94,11 @@ function App() {
     }
   }, [gameState.isGameOver, screen])
 
+  // Scroll to top on screen change
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [screen])
+
   const winner = gameState.winnerId
     ? getPlayerById(gameState.winnerId)
     : undefined
