@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import type { DieColor } from '@/types/game'
 import { DIE_COLORS } from '@/lib/constants'
 
@@ -12,12 +13,35 @@ interface PlayerSetupProps {
 const COLORS: DieColor[] = ['red', 'green', 'blue', 'black']
 
 export function PlayerSetup({ onStart }: PlayerSetupProps) {
+  const [playerCount, setPlayerCount] = useState<3 | 4>(4)
   const [players, setPlayers] = useState<{ name: string; color: DieColor }[]>([
     { name: '', color: 'red' },
     { name: '', color: 'green' },
     { name: '', color: 'blue' },
     { name: '', color: 'black' },
   ])
+
+  const activePlayers = players.slice(0, playerCount)
+
+  const handlePlayerCountChange = (value: string) => {
+    if (value === '3' || value === '4') {
+      const newCount = Number(value) as 3 | 4
+
+      if (newCount === 4 && playerCount === 3) {
+        // Passage de 3 à 4 : attribuer la première couleur disponible au joueur 4
+        const usedColors = players.slice(0, 3).map((p) => p.color)
+        const availableColor = COLORS.find((c) => !usedColors.includes(c)) || 'black'
+
+        setPlayers((prev) => {
+          const updated = [...prev]
+          updated[3] = { ...updated[3], color: availableColor }
+          return updated
+        })
+      }
+
+      setPlayerCount(newCount)
+    }
+  }
 
   const updatePlayerName = (index: number, name: string) => {
     setPlayers((prev) => prev.map((p, i) => (i === index ? { ...p, name } : p)))
@@ -26,8 +50,9 @@ export function PlayerSetup({ onStart }: PlayerSetupProps) {
   const updatePlayerColor = (index: number, color: DieColor) => {
     setPlayers((prev) => {
       const currentColor = prev[index].color
+      // Ne chercher que parmi les joueurs actifs
       const otherPlayerWithColor = prev.findIndex(
-        (p, i) => i !== index && p.color === color
+        (p, i) => i !== index && i < playerCount && p.color === color
       )
 
       if (otherPlayerWithColor !== -1) {
@@ -43,12 +68,12 @@ export function PlayerSetup({ onStart }: PlayerSetupProps) {
     })
   }
 
-  const isValid = players.every((p) => p.name.trim().length > 0)
+  const isValid = activePlayers.every((p) => p.name.trim().length > 0)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault()
     if (isValid) {
-      onStart(players.map((p) => ({ ...p, name: p.name.trim() })))
+      onStart(activePlayers.map((p) => ({ ...p, name: p.name.trim() })))
     }
   }
 
@@ -58,12 +83,28 @@ export function PlayerSetup({ onStart }: PlayerSetupProps) {
         <CardHeader className="pb-4">
           <CardTitle className="text-2xl text-center">Tumblin' Dice</CardTitle>
           <p className="text-muted-foreground text-center text-sm">
-            Entrez les noms des 4 joueurs
+            Entrez les noms des joueurs
           </p>
+          <div className="flex items-center justify-center gap-3 pt-2">
+            <span className="text-sm text-muted-foreground">Nombre de joueurs</span>
+            <ToggleGroup
+              type="single"
+              variant="outline"
+              value={String(playerCount)}
+              onValueChange={handlePlayerCountChange}
+            >
+              <ToggleGroupItem value="3" className="w-10 h-8">
+                3
+              </ToggleGroupItem>
+              <ToggleGroupItem value="4" className="w-10 h-8">
+                4
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {players.map((player, index) => (
+            {activePlayers.map((player, index) => (
               <div key={index} className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium">Joueur {index + 1}</label>
@@ -100,7 +141,7 @@ export function PlayerSetup({ onStart }: PlayerSetupProps) {
       {/* Bouton fixe en bas */}
       <div className="fixed bottom-0 left-0 right-0 p-3 bg-background border-t">
         <Button
-          onClick={handleSubmit}
+          onClick={() => handleSubmit()}
           className="w-full h-12 text-lg max-w-md mx-auto block"
           disabled={!isValid}
         >
